@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=1920">
+<title>How to Use Claude Code to Solve Real-Life Founders' Problems</title>
+<style>
+/* ── Font Face ── */
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('fonts/SuisseIntl-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('fonts/SuisseIntl-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('fonts/SuisseIntl-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('fonts/SuisseIntl-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('fonts/SuisseIntl-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── Design Tokens ── */
+:root {
+  --bg-dark:    #02021e;
+  --blue:       #3719ca;
+  --yellow:     #fdc448;
+  --purple:     #7057d6;
+  --white:      #ffffff;
+  --white-70:   rgba(255, 255, 255, 0.7);
+  --white-30:   rgba(255, 255, 255, 0.3);
+  --grey:       #9a9aa5;
+  --grey-light: #f5f5f7;
+  --font:       'Suisse Intl', Arial, sans-serif;
+
+  --slide-w: 1920;
+  --slide-h: 1080;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #000;
+}
+
+/* ── Deck Container ── */
+.deck {
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+  position: relative;
+  background: var(--bg-dark);
+}
+
+/* ── Base Slide ── */
+.slide {
+  display: none;
+  position: absolute;
+  inset: 0;
+  width: 1920px;
+  height: 1080px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 120px;
+  font-family: var(--font);
+  color: var(--white);
+  background: var(--bg-dark);
+  overflow: hidden;
+}
+
+.slide.active {
+  display: flex;
+}
+
+/* ── Slide Types ── */
+
+/* Title slide: logo + big heading + subtitle */
+.slide--title {
+  text-align: center;
+  gap: 32px;
+}
+.slide--title .logo {
+  width: 200px;
+  margin-bottom: 24px;
+}
+.slide--title h1 {
+  font-size: 72px;
+  font-weight: 600;
+  line-height: 1.1;
+  max-width: 1400px;
+}
+.slide--title .subtitle {
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--white-70);
+}
+
+/* Section divider */
+.slide--section {
+  text-align: center;
+  background: var(--blue);
+}
+.slide--section h2 {
+  font-size: 80px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.slide--section p {
+  font-size: 28px;
+  font-weight: 300;
+  color: var(--white-70);
+  margin-top: 24px;
+}
+
+/* Content slide */
+.slide--content {
+  align-items: flex-start;
+  justify-content: center;
+  gap: 32px;
+}
+.slide--content h2 {
+  font-size: 56px;
+  font-weight: 600;
+  line-height: 1.15;
+}
+.slide--content p {
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--white-70);
+  max-width: 1200px;
+}
+.slide--content ul {
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--white-70);
+  max-width: 1200px;
+  list-style: none;
+  padding: 0;
+}
+.slide--content ul li::before {
+  content: '→ ';
+  color: var(--yellow);
+}
+
+/* Two-column layout */
+.slide--two-col {
+  display: none;
+  padding: 80px 120px;
+}
+.slide--two-col.active {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.slide--two-col h2 {
+  font-size: 48px;
+  font-weight: 600;
+  line-height: 1.15;
+  grid-column: 1 / -1;
+}
+
+/* Video slide */
+.slide--video {
+  padding: 0;
+  background: #000;
+}
+.slide--video video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* CTA slide */
+.slide--cta {
+  text-align: center;
+  gap: 40px;
+}
+.slide--cta h2 {
+  font-size: 64px;
+  font-weight: 600;
+}
+.slide--cta p {
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--white-70);
+}
+.slide--cta .cta-button {
+  display: inline-block;
+  padding: 20px 48px;
+  font-size: 24px;
+  font-weight: 600;
+  font-family: var(--font);
+  color: var(--bg-dark);
+  background: var(--yellow);
+  border-radius: 60px;
+  text-decoration: none;
+  margin-top: 16px;
+}
+
+/* Image slide */
+.slide--image {
+  padding: 0;
+}
+.slide--image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Typography Utilities ── */
+.accent { color: var(--yellow); }
+.muted  { color: var(--white-70); }
+.small  { font-size: 22px; }
+
+/* ── Animations ── */
+@keyframes anim-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes anim-slide-up {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes anim-slide-left {
+  from { opacity: 0; transform: translateX(60px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+@keyframes anim-zoom {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+.animate-fade       { animation: anim-fade 400ms ease-out both; }
+.animate-slide-up   { animation: anim-slide-up 400ms ease-out both; }
+.animate-slide-left { animation: anim-slide-left 400ms ease-out both; }
+.animate-zoom       { animation: anim-zoom 400ms ease-out both; }
+
+/* ── Slide Counter ── */
+.slide-counter {
+  position: fixed;
+  bottom: 24px;
+  right: 40px;
+  font-family: var(--font);
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--white-30);
+  z-index: 100;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* ── Progress Bar ── */
+.progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  background: var(--yellow);
+  z-index: 100;
+  transition: width 300ms ease-out;
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+  <!-- Slide 1: Title -->
+  <section class="slide slide--title active" data-animate="fade">
+    <img src="logo.svg" alt="Halo Lab" class="logo">
+    <h1>How to Use <span class="accent">Claude Code</span> to Solve Real-Life Founders' Problems</h1>
+    <p class="subtitle">A practical guide for healthtech founders</p>
+  </section>
+
+  <!-- Slide 2: Section -->
+  <section class="slide slide--section" data-animate="slide-up">
+    <h2>Why This Matters</h2>
+    <p>AI-assisted development is changing how founders ship products</p>
+  </section>
+
+  <!-- Slide 3: Content -->
+  <section class="slide slide--content" data-animate="slide-left">
+    <h2>What We'll Cover</h2>
+    <ul>
+      <li>Regulatory & compliance document analysis</li>
+      <li>EHR data exchange & FHIR integration</li>
+      <li>Live demos with real-world messy data</li>
+    </ul>
+  </section>
+
+</div>
+
+<div class="progress-bar"></div>
+<div class="slide-counter"></div>
+
+<script>
+(function () {
+  const deck = document.querySelector('.deck');
+  const slides = Array.from(deck.querySelectorAll('.slide'));
+  const counter = document.querySelector('.slide-counter');
+  const progressBar = document.querySelector('.progress-bar');
+  const total = slides.length;
+
+  let current = 0;
+  let animating = false;
+
+  // ── Scaling ──
+  function scaleDeck() {
+    const sw = 1920;
+    const sh = 1080;
+    const scaleX = window.innerWidth / sw;
+    const scaleY = window.innerHeight / sh;
+    const scale = Math.min(scaleX, scaleY);
+    deck.style.transform = `scale(${scale})`;
+    // Center the deck if there's leftover space
+    const offsetX = (window.innerWidth - sw * scale) / 2;
+    const offsetY = (window.innerHeight - sh * scale) / 2;
+    deck.style.marginLeft = offsetX + 'px';
+    deck.style.marginTop = offsetY + 'px';
+  }
+  window.addEventListener('resize', scaleDeck);
+  scaleDeck();
+
+  // ── Navigation ──
+  function goTo(n) {
+    if (n < 0 || n >= total || n === current || animating) return;
+
+    // Hide current slide
+    const prev = slides[current];
+    prev.classList.remove('active');
+    removeAnimationClasses(prev);
+
+    // Show next slide
+    current = n;
+    const next = slides[current];
+    next.classList.add('active');
+
+    // Trigger animation
+    const anim = next.dataset.animate;
+    if (anim) {
+      animating = true;
+      next.classList.add('animate-' + anim);
+      next.addEventListener('animationend', function handler() {
+        next.removeEventListener('animationend', handler);
+        animating = false;
+      });
+      // Safety timeout in case animationend doesn't fire
+      setTimeout(() => { animating = false; }, 500);
+    }
+
+    updateCounter();
+    updateHash();
+    pauseAllVideos();
+  }
+
+  function next() { goTo(current + 1); }
+  function prev() { goTo(current - 1); }
+
+  function removeAnimationClasses(el) {
+    el.classList.remove('animate-fade', 'animate-slide-up', 'animate-slide-left', 'animate-zoom');
+  }
+
+  // ── Counter & Progress ──
+  function updateCounter() {
+    counter.textContent = (current + 1) + ' / ' + total;
+    progressBar.style.width = ((current + 1) / total * 100) + '%';
+  }
+  updateCounter();
+
+  // ── Hash Tracking ──
+  function updateHash() {
+    history.replaceState(null, '', '#slide=' + (current + 1));
+  }
+
+  function readHash() {
+    const match = location.hash.match(/slide=(\d+)/);
+    if (match) {
+      const n = parseInt(match[1], 10) - 1;
+      if (n >= 0 && n < total) {
+        slides[current].classList.remove('active');
+        removeAnimationClasses(slides[current]);
+        current = n;
+        slides[current].classList.add('active');
+        updateCounter();
+      }
+    }
+  }
+  readHash();
+
+  // ── Video Control ──
+  function pauseAllVideos() {
+    deck.querySelectorAll('video').forEach(v => {
+      if (!v.paused) v.pause();
+    });
+  }
+
+  function isVideoPlaying() {
+    const activeSlide = slides[current];
+    const video = activeSlide.querySelector('video');
+    return video && !video.paused;
+  }
+
+  // ── Keyboard ──
+  document.addEventListener('keydown', function (e) {
+    // Suppress navigation while video is playing
+    if (isVideoPlaying() && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '].includes(e.key)) {
+      return;
+    }
+
+    switch (e.key) {
+      case 'ArrowRight':
+      case 'ArrowDown':
+      case ' ':
+      case 'PageDown':
+        e.preventDefault();
+        next();
+        break;
+      case 'ArrowLeft':
+      case 'ArrowUp':
+      case 'PageUp':
+        e.preventDefault();
+        prev();
+        break;
+      case 'Home':
+        e.preventDefault();
+        goTo(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        goTo(total - 1);
+        break;
+      case 'f':
+      case 'F':
+        // Toggle fullscreen on video slides
+        var video = slides[current].querySelector('video');
+        if (video) {
+          if (document.fullscreenElement) {
+            document.exitFullscreen();
+          } else {
+            video.requestFullscreen();
+          }
+        }
+        break;
+    }
+  });
+
+  // ── Video Click → Fullscreen ──
+  deck.addEventListener('click', function (e) {
+    const video = e.target.closest('video');
+    if (video && video.hasAttribute('data-fullscreen')) {
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        video.requestFullscreen();
+      }
+    }
+  });
+
+})();
+</script>
+
+</body>
+</html>
