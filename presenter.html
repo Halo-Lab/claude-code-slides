@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Presenter View</title>
+<style>
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('fonts/SuisseIntl-Regular.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('fonts/SuisseIntl-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Suisse Intl';
+  src: url('fonts/SuisseIntl-Bold.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #0a0a1a;
+  font-family: 'Suisse Intl', Arial, sans-serif;
+  color: #e0e0e0;
+}
+
+.presenter {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-rows: 1fr auto;
+  height: 100vh;
+  gap: 16px;
+  padding: 16px;
+}
+
+/* ── Slide Previews ── */
+.preview-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.preview-label {
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #666;
+}
+
+.preview-current {
+  flex: 3;
+  position: relative;
+}
+.preview-next {
+  flex: 2;
+  position: relative;
+  opacity: 0.6;
+}
+
+.preview-current .preview-label { color: #fdc448; }
+
+.preview-frame {
+  width: 100%;
+  height: calc(100% - 20px);
+  border: 2px solid #222;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+  position: relative;
+}
+.preview-current .preview-frame {
+  border-color: #fdc448;
+}
+
+.preview-frame iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1920px;
+  height: 1080px;
+  transform-origin: 0 0;
+  border: none;
+  pointer-events: none;
+}
+
+/* ── Notes Panel ── */
+.notes-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.notes-content {
+  flex: 1;
+  overflow-y: auto;
+  background: #111122;
+  border-radius: 8px;
+  padding: 24px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #ccc;
+}
+
+.notes-content blockquote,
+.notes-content p:first-child {
+  color: #fff;
+  font-size: 20px;
+  line-height: 1.6;
+}
+
+.notes-content h2 {
+  font-size: 22px;
+  color: #fdc448;
+  margin-bottom: 12px;
+}
+
+.notes-content ul {
+  padding-left: 20px;
+  margin-top: 12px;
+}
+.notes-content li {
+  margin-bottom: 6px;
+  color: #999;
+}
+
+.notes-content strong {
+  color: #fdc448;
+}
+
+.notes-content code {
+  background: rgba(255,255,255,0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+/* ── Bottom Bar ── */
+.bottom-bar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 8px;
+  background: #111122;
+  border-radius: 8px;
+}
+
+.slide-nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.slide-nav button {
+  background: #222;
+  border: 1px solid #333;
+  color: #ccc;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-family: 'Suisse Intl', Arial, sans-serif;
+  font-size: 14px;
+  cursor: pointer;
+}
+.slide-nav button:hover { background: #333; }
+
+.slide-info {
+  font-size: 20px;
+  font-weight: 500;
+  color: #fdc448;
+  min-width: 80px;
+  text-align: center;
+}
+
+.timer {
+  font-size: 32px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #e0e0e0;
+  min-width: 120px;
+  text-align: center;
+}
+
+.timer-controls {
+  display: flex;
+  gap: 8px;
+}
+.timer-controls button {
+  background: #222;
+  border: 1px solid #333;
+  color: #ccc;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-family: 'Suisse Intl', Arial, sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+.timer-controls button:hover { background: #333; }
+
+/* ── Scrollbar ── */
+.notes-content::-webkit-scrollbar { width: 6px; }
+.notes-content::-webkit-scrollbar-track { background: transparent; }
+.notes-content::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="presenter">
+
+  <!-- Left: slide previews -->
+  <div class="preview-panel">
+    <div class="preview-current">
+      <div class="preview-label">Current Slide</div>
+      <div class="preview-frame" id="frame-current"></div>
+    </div>
+    <div class="preview-next">
+      <div class="preview-label">Next Slide</div>
+      <div class="preview-frame" id="frame-next"></div>
+    </div>
+  </div>
+
+  <!-- Right: notes -->
+  <div class="notes-panel">
+    <div class="preview-label">Speaker Notes</div>
+    <div class="notes-content" id="notes"></div>
+  </div>
+
+  <!-- Bottom bar -->
+  <div class="bottom-bar">
+    <div class="slide-nav">
+      <button id="btn-prev">&larr; Prev</button>
+      <div class="slide-info" id="slide-info">1 / 17</div>
+      <button id="btn-next">Next &rarr;</button>
+    </div>
+    <div class="timer" id="timer">00:00</div>
+    <div class="timer-controls">
+      <button id="btn-timer">Start</button>
+      <button id="btn-reset">Reset</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function () {
+  // ── Config (detect slide count) ──
+  let TOTAL_SLIDES = 0;
+  let current = 0;
+
+  async function detectSlideCount() {
+    for (let i = 1; i <= 99; i++) {
+      const num = String(i).padStart(2, '0');
+      try {
+        const res = await fetch('slides/' + num + '.md', { method: 'HEAD' });
+        if (!res.ok) break;
+        TOTAL_SLIDES = i;
+      } catch (e) { break; }
+    }
+    slideInfo.textContent = '1 / ' + TOTAL_SLIDES;
+  }
+
+  // ── Elements ──
+  const frameCurrent = document.getElementById('frame-current');
+  const frameNext = document.getElementById('frame-next');
+  const notesEl = document.getElementById('notes');
+  const slideInfo = document.getElementById('slide-info');
+  const timerEl = document.getElementById('timer');
+
+  // ── Create iframes for slide previews ──
+  function createIframe(container, slideIndex) {
+    container.innerHTML = '';
+    const iframe = document.createElement('iframe');
+    iframe.src = 'index.html#slide=' + (slideIndex + 1);
+    // Hide counter and progress bar inside iframes
+    iframe.onload = function () {
+      try {
+        const doc = iframe.contentDocument;
+        const style = doc.createElement('style');
+        style.textContent = '.slide-counter, .progress-bar { display: none !important; }';
+        doc.head.appendChild(style);
+      } catch (e) { /* cross-origin fallback */ }
+    };
+    container.appendChild(iframe);
+    scaleIframe(container, iframe);
+    return iframe;
+  }
+
+  function scaleIframe(container, iframe) {
+    const rect = container.getBoundingClientRect();
+    const scaleX = rect.width / 1920;
+    const scaleY = rect.height / 1080;
+    const scale = Math.min(scaleX, scaleY);
+    iframe.style.transform = `scale(${scale})`;
+  }
+
+  let iframeCurrent = createIframe(frameCurrent, 0);
+  let iframeNext = createIframe(frameNext, 1);
+
+  window.addEventListener('resize', () => {
+    scaleIframe(frameCurrent, frameCurrent.querySelector('iframe'));
+    scaleIframe(frameNext, frameNext.querySelector('iframe'));
+  });
+
+  // ── Notes loading (from slides/*.md, after ---notes--- separator) ──
+  const notesCache = {};
+
+  async function loadNotes(slideIndex) {
+    const num = String(slideIndex + 1).padStart(2, '0');
+    if (notesCache[num]) {
+      notesEl.innerHTML = notesCache[num];
+      return;
+    }
+    try {
+      const res = await fetch('slides/' + num + '.md');
+      if (!res.ok) throw new Error('not found');
+      const text = await res.text();
+      // Extract notes after ---notes--- separator
+      const parts = text.split(/\n---notes---\n/);
+      const notesMd = (parts[1] || '').trim();
+      if (!notesMd) {
+        notesEl.innerHTML = '<p style="color:#555">No notes for this slide.</p>';
+        return;
+      }
+      const html = renderMarkdown(notesMd);
+      notesCache[num] = html;
+      notesEl.innerHTML = html;
+    } catch (e) {
+      notesEl.innerHTML = '<p style="color:#555">No notes for this slide.</p>';
+    }
+  }
+
+  // Simple markdown renderer for notes
+  function renderMarkdown(text) {
+    let html = text
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+      .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*([^*]+?)\*/g, '<em>$1</em>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>')
+      .replace(/^"(.+)"$/gm, '<blockquote>"$1"</blockquote>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>')
+      .split(/\n\n+/)
+      .map(block => {
+        block = block.trim();
+        if (!block) return '';
+        if (block.startsWith('<h') || block.startsWith('<ul') || block.startsWith('<blockquote')) return block;
+        return '<p>' + block.replace(/\n/g, '<br>') + '</p>';
+      })
+      .join('\n');
+    return html;
+  }
+
+  // ── Navigation ──
+  function goTo(n) {
+    if (n < 0 || n >= TOTAL_SLIDES || n === current) return;
+    current = n;
+    updateView();
+    channel.postMessage({ type: 'slide', index: current });
+  }
+
+  function updateView() {
+    // Update iframes
+    iframeCurrent = createIframe(frameCurrent, current);
+    if (current + 1 < TOTAL_SLIDES) {
+      iframeNext = createIframe(frameNext, current + 1);
+      frameNext.parentElement.style.opacity = '0.6';
+    } else {
+      frameNext.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100%;color:#333;font-size:20px;">End of deck</div>';
+      frameNext.parentElement.style.opacity = '0.3';
+    }
+
+    // Update info
+    slideInfo.textContent = (current + 1) + ' / ' + TOTAL_SLIDES;
+
+    // Load notes
+    loadNotes(current);
+  }
+
+  document.getElementById('btn-prev').addEventListener('click', () => goTo(current - 1));
+  document.getElementById('btn-next').addEventListener('click', () => goTo(current + 1));
+
+  // ── Keyboard ──
+  document.addEventListener('keydown', function (e) {
+    switch (e.key) {
+      case 'ArrowRight':
+      case ' ':
+      case 'PageDown':
+        e.preventDefault();
+        goTo(current + 1);
+        break;
+      case 'ArrowLeft':
+      case 'PageUp':
+        e.preventDefault();
+        goTo(current - 1);
+        break;
+      case 'Home':
+        e.preventDefault();
+        goTo(0);
+        break;
+      case 'End':
+        e.preventDefault();
+        goTo(TOTAL_SLIDES - 1);
+        break;
+    }
+  });
+
+  // ── BroadcastChannel (sync with audience view) ──
+  const channel = new BroadcastChannel('slides-sync');
+  channel.onmessage = function (e) {
+    if (e.data.type === 'slide' && e.data.index !== current) {
+      current = e.data.index;
+      updateView();
+    }
+  };
+
+  // ── Timer ──
+  let timerRunning = false;
+  let timerStart = 0;
+  let timerElapsed = 0;
+  let timerInterval = null;
+
+  function formatTime(ms) {
+    const totalSec = Math.floor(ms / 1000);
+    const min = Math.floor(totalSec / 60);
+    const sec = totalSec % 60;
+    return String(min).padStart(2, '0') + ':' + String(sec).padStart(2, '0');
+  }
+
+  function updateTimer() {
+    const now = Date.now();
+    timerEl.textContent = formatTime(timerElapsed + (timerRunning ? now - timerStart : 0));
+  }
+
+  document.getElementById('btn-timer').addEventListener('click', function () {
+    if (timerRunning) {
+      timerElapsed += Date.now() - timerStart;
+      timerRunning = false;
+      clearInterval(timerInterval);
+      this.textContent = 'Start';
+    } else {
+      timerStart = Date.now();
+      timerRunning = true;
+      timerInterval = setInterval(updateTimer, 1000);
+      this.textContent = 'Pause';
+    }
+  });
+
+  document.getElementById('btn-reset').addEventListener('click', function () {
+    timerElapsed = 0;
+    timerStart = Date.now();
+    timerEl.textContent = '00:00';
+  });
+
+  // ── Init ──
+  detectSlideCount().then(() => updateView());
+
+})();
+</script>
+
+</body>
+</html>

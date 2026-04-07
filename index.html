@@ -188,12 +188,97 @@ html, body {
   grid-column: 1 / -1;
 }
 
+/* Profile slide */
+.slide--profile {
+  padding: 80px 120px;
+}
+.slide--profile.active {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 80px;
+  align-items: center;
+}
+.slide--profile .profile-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+.slide--profile .profile-photo {
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--white-30);
+}
+.slide--profile .profile-logo {
+  width: 200px;
+}
+.slide--profile .profile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.slide--profile h1 {
+  font-size: 64px;
+  font-weight: 600;
+  line-height: 1.1;
+}
+.slide--profile p {
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--white-70);
+  max-width: 800px;
+}
+
+/* Demo intro slide */
+.slide--demo-intro {
+  padding: 80px 120px 0;
+  justify-content: flex-start;
+  align-items: flex-start;
+  gap: 40px;
+  overflow: hidden;
+}
+.slide--demo-intro .demo-intro-text {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.slide--demo-intro .demo-intro-text h2 {
+  font-size: 72px;
+  font-weight: 600;
+}
+.slide--demo-intro .demo-intro-text p {
+  font-size: 28px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--white-70);
+  max-width: 1200px;
+}
+.slide--demo-intro .demo-intro-visual {
+  position: absolute;
+  bottom: 0;
+  left: 120px;
+  right: 120px;
+  max-height: 65%;
+  overflow: hidden;
+}
+.slide--demo-intro .demo-intro-visual img {
+  width: 100%;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -10px 60px rgba(0,0,0,0.3);
+  display: block;
+}
+
 /* Video slide */
 .slide--video {
   padding: 0;
   background: #000;
 }
 .slide--video video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -222,6 +307,18 @@ html, body {
   color: var(--bg-dark);
   background: var(--yellow);
   border-radius: 60px;
+  margin: 8px;
+}
+.slide--cta .cta-button-secondary {
+  display: inline-block;
+  padding: 18px 44px;
+  font-size: 22px;
+  font-weight: 500;
+  font-family: var(--font);
+  color: var(--white);
+  background: transparent;
+  border: 2px solid var(--white-30);
+  border-radius: 60px;
   text-decoration: none;
   margin-top: 16px;
 }
@@ -233,13 +330,194 @@ html, body {
 .slide--image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+}
+
+/* Three-column comparison */
+.slide--three-col {
+  padding: 80px 100px;
+  gap: 0;
+}
+.slide--three-col.active {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 32px;
+  align-items: start;
+  align-content: center;
+}
+.slide--three-col h2 {
+  grid-column: 1 / -1;
+  font-size: 48px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+.col-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 36px 32px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.col-card.col-card--highlight {
+  background: rgba(55, 25, 202, 0.3);
+  border: 2px solid var(--blue);
+}
+.col-card h3 {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--yellow);
+}
+.col-card .col-subtitle {
+  font-size: 18px;
+  font-weight: 300;
+  color: var(--white-70);
+  line-height: 1.5;
+}
+.col-card ul {
+  font-size: 18px;
+  font-weight: 300;
+  line-height: 1.7;
+  color: var(--white-70);
+  list-style: none;
+  padding: 0;
+}
+.col-card ul li::before {
+  content: '• ';
+  color: var(--yellow);
+}
+.col-card .col-label {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--grey);
+  margin-top: 8px;
+}
+.col-card .col-inline {
+  font-size: 15px;
+  color: var(--grey);
+  line-height: 1.5;
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+/* Code block on slides */
+.code-block {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 32px 40px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 26px;
+  line-height: 1.8;
+  color: var(--grey-light);
+  width: 100%;
+  max-width: 1200px;
+}
+.code-block .prompt {
+  color: var(--yellow);
+}
+.code-block .comment {
+  color: var(--grey);
+}
+
+/* Quote block */
+.quote-block {
+  font-size: 36px;
+  font-weight: 300;
+  line-height: 1.5;
+  color: var(--white);
+  max-width: 1200px;
+  border-left: 4px solid var(--yellow);
+  padding-left: 40px;
+  font-style: italic;
+}
+
+/* Finding / callout card */
+.finding {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 28px 36px;
+  max-width: 1400px;
+  width: 100%;
+}
+.finding .finding-label {
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #f87171;
+  margin-bottom: 12px;
+}
+.finding p {
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 1.6;
+  color: var(--white-70);
+}
+.finding strong {
+  color: var(--white);
+  font-weight: 500;
+}
+
+/* Rapid-fire grid */
+.rapid-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 32px;
+  width: 100%;
+  max-width: 1600px;
+}
+.rapid-card {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.rapid-card h3 {
+  font-size: 28px;
+  font-weight: 600;
+}
+.rapid-card .rapid-input {
+  font-size: 18px;
+  color: var(--white-70);
+  font-weight: 300;
+  line-height: 1.5;
+}
+.rapid-card .rapid-output {
+  font-size: 18px;
+  color: var(--yellow);
+  font-weight: 400;
+  line-height: 1.5;
+}
+.rapid-card .rapid-time {
+  font-size: 16px;
+  color: var(--grey);
+  margin-top: auto;
+}
+
+/* Install command highlight */
+.install-cmd {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 24px 40px;
+  font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+  font-size: 36px;
+  color: var(--yellow);
+  display: inline-block;
 }
 
 /* ── Typography Utilities ── */
 .accent { color: var(--yellow); }
 .muted  { color: var(--white-70); }
 .small  { font-size: 22px; }
+.mt-16  { margin-top: 16px; }
+.mb-16  { margin-bottom: 16px; }
 
 /* ── Animations ── */
 @keyframes anim-fade {
@@ -289,83 +567,234 @@ html, body {
   transition: width 300ms ease-out;
   pointer-events: none;
 }
+/* ── Loading screen ── */
+.loading {
+  position: fixed; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-dark);
+  font-family: var(--font);
+  font-size: 24px;
+  color: var(--white-30);
+  z-index: 999;
+}
+.loading.hidden { display: none; }
 </style>
 </head>
 <body>
 
-<div class="deck">
+<div class="loading" id="loading">Loading slides...</div>
+<div class="deck" id="deck"></div>
 
-  <!-- Slide 1: Title -->
-  <section class="slide slide--title active" data-animate="fade">
-    <img src="logo.svg" alt="Halo Lab" class="logo">
-    <h1>How to Use <span class="accent">Claude Code</span> to Solve Real-Life Founders' Problems</h1>
-    <p class="subtitle">A practical guide for healthtech founders</p>
-  </section>
-
-  <!-- Slide 2: Section -->
-  <section class="slide slide--section" data-animate="slide-up">
-    <h2>Why This Matters</h2>
-    <p>AI-assisted development is changing how founders ship products</p>
-  </section>
-
-  <!-- Slide 3: Content -->
-  <section class="slide slide--content" data-animate="slide-left">
-    <h2>What We'll Cover</h2>
-    <ul>
-      <li>Regulatory & compliance document analysis</li>
-      <li>EHR data exchange & FHIR integration</li>
-      <li>Live demos with real-world messy data</li>
-    </ul>
-  </section>
-
-</div>
-
-<div class="progress-bar"></div>
-<div class="slide-counter"></div>
+<div class="progress-bar" id="progress-bar"></div>
+<div class="slide-counter" id="slide-counter"></div>
 
 <script>
 (function () {
-  const deck = document.querySelector('.deck');
-  const slides = Array.from(deck.querySelectorAll('.slide'));
-  const counter = document.querySelector('.slide-counter');
-  const progressBar = document.querySelector('.progress-bar');
-  const total = slides.length;
+  const deck = document.getElementById('deck');
+  const counter = document.getElementById('slide-counter');
+  const progressBar = document.getElementById('progress-bar');
+  const loadingEl = document.getElementById('loading');
 
+  let slides = [];
+  let total = 0;
   let current = 0;
   let animating = false;
 
+  // ── Markdown parser ──
+  function parseFrontmatter(text) {
+    const match = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+    if (!match) return { meta: {}, body: text };
+    const meta = {};
+    match[1].split('\n').forEach(line => {
+      const [k, ...v] = line.split(':');
+      if (k && v.length) meta[k.trim()] = v.join(':').trim();
+    });
+    return { meta, body: match[2] };
+  }
+
+  function splitNotes(body) {
+    const parts = body.split(/\n---notes---\n/);
+    return { content: parts[0].trim(), notes: (parts[1] || '').trim() };
+  }
+
+  function mdToHtml(md) {
+    return md
+      .replace(/!\[([^\]]*)\]\(([^)]+)\)/g, '<img src="$2" alt="$1" class="logo">')
+      .replace(/^# (.+)$/gm, (_, t) => '<h1>' + inlineFormat(t) + '</h1>')
+      .replace(/^## (.+?)( \{highlight\})?$/gm, (_, t, h) => '<h2' + (h ? ' class="highlight"' : '') + '>' + inlineFormat(t) + '</h2>')
+      .replace(/^### (.+)$/gm, (_, t) => '<h3>' + inlineFormat(t) + '</h3>')
+      .replace(/^> (.+)$/gm, '<blockquote>$1</blockquote>')
+      .replace(/(<blockquote>.*<\/blockquote>\n?)+/g, m =>
+        '<div class="quote-block">' + m.replace(/<\/?blockquote>/g, '').replace(/\n/g, '<br>') + '</div>')
+      .replace(/^```([\s\S]*?)^```/gm, (_, code) => {
+        const lines = code.trim().split('\n').map(l =>
+          inlineFormat(l.replace(/^(.+?)(#.*)$/, '<span class="prompt">$1</span><span class="comment">$2</span>'))
+        ).join('<br>');
+        return '<div class="code-block">' + lines + '</div>';
+      })
+      .replace(/\{install\}(.*?)\{\/install\}/g, '<div class="install-cmd">$1</div>')
+      .replace(/\{cta\}(.*?)\{\/cta\}/g, '<span class="cta-button">$1</span>')
+      .replace(/\{cta-secondary\}(.*?)\{\/cta-secondary\}/g, '<span class="cta-button-secondary">$1</span>')
+      .replace(/\{finding\}\n!!(.*)\n([\s\S]*?)\{\/finding\}/g, (_, label, body) =>
+        '<div class="finding"><p class="finding-label">' + label + '</p>' + inlineFormat(body.trim()).split('\n').map(l => '<p>' + l + '</p>').join('') + '</div>')
+      .replace(/\{grid\}([\s\S]*?)\{\/grid\}/g, (_, inner) => renderGrid(inner))
+      .replace(/^\*\*(.+?):\*\*$/gm, '<p class="col-label">$1</p>')
+      .replace(/^\+ (.+)$/gm, '<p class="col-inline">+ $1</p>')
+      .replace(/^− (.+)$/gm, '<p class="col-inline">− $1</p>')
+      .replace(/^- (.+)$/gm, '<li>$1</li>')
+      .replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>')
+      .split(/\n\n+/)
+      .map(block => {
+        block = block.trim();
+        if (!block || block.startsWith('<')) return block;
+        return '<p>' + inlineFormat(block).replace(/\n/g, '<br>') + '</p>';
+      })
+      .join('\n');
+  }
+
+  function inlineFormat(text) {
+    return text
+      .replace(/==(.+?)==/g, '<span class="accent">$1</span>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/~(.+?)~/g, '<span class="small muted">$1</span>');
+  }
+
+  function renderGrid(inner) {
+    const cards = inner.trim().split(/^## /m).filter(Boolean);
+    let html = '<div class="rapid-grid">';
+    cards.forEach(card => {
+      const lines = card.trim().split('\n');
+      const title = lines[0];
+      const rest = lines.slice(1).join('\n').trim();
+      const parts = rest.split('\n').filter(Boolean);
+      html += '<div class="rapid-card"><h3>' + inlineFormat(title) + '</h3>';
+      parts.forEach(p => {
+        p = inlineFormat(p.trim());
+        if (p.startsWith('<span class="accent">')) html += '<p class="rapid-output">' + p + '</p>';
+        else if (p.startsWith('<span class="small')) html += '<p class="rapid-time">' + p.replace(/<\/?span[^>]*>/g, '') + '</p>';
+        else html += '<p class="rapid-input">' + p + '</p>';
+      });
+      html += '</div>';
+    });
+    return html + '</div>';
+  }
+
+  // ── Slide rendering by type ──
+  function renderSlide(meta, contentHtml, index) {
+    const section = document.createElement('section');
+    const type = meta.type || 'content';
+    section.className = 'slide slide--' + type;
+    if (meta.animate) section.dataset.animate = meta.animate;
+    if (meta.background) section.style.background = meta.background;
+    if (index === 0) section.classList.add('active');
+
+    if (type === 'video') {
+      section.innerHTML = '<video src="' + (meta.src || '') + '" data-fullscreen controls preload="metadata"></video>';
+    } else if (type === 'three-col') {
+      section.innerHTML = renderThreeCol(contentHtml);
+    } else if (type === 'profile' || type === 'demo-intro') {
+      section.innerHTML = contentHtml;
+    } else if (type === 'title') {
+      // h1 → h1, first img → logo, remaining p → subtitle
+      let html = contentHtml;
+      html = html.replace(/<p>(?!<)/g, '<p class="subtitle">');
+      section.innerHTML = html;
+    } else if (type === 'section') {
+      // h1 → h2 for section slides
+      section.innerHTML = contentHtml.replace(/<h1>/g, '<h2>').replace(/<\/h1>/g, '</h2>');
+    } else {
+      section.innerHTML = contentHtml;
+      // Promote h1 to h2 for content/cta
+      section.querySelectorAll('h1').forEach(h => {
+        const h2 = document.createElement('h2');
+        h2.innerHTML = h.innerHTML;
+        h.replaceWith(h2);
+      });
+    }
+
+    return section;
+  }
+
+  function renderThreeCol(html) {
+    // h1 = slide title, h2s = column headers
+    const h1Match = html.match(/<h1>(.*?)<\/h1>/);
+    const slideTitle = h1Match ? '<h2>' + h1Match[1] + '</h2>' : '';
+    const afterTitle = html.replace(/<h1>.*?<\/h1>/, '');
+    // Split by h2 opening tags, keeping them
+    const parts = afterTitle.split(/(<h2[^>]*>)/);
+    const cols = [];
+    for (let i = 1; i < parts.length; i += 2) {
+      const tag = parts[i];
+      const content = (parts[i + 1] || '').split('</h2>');
+      const heading = content[0];
+      const body = content.slice(1).join('</h2>');
+      const isHighlight = tag.includes('highlight');
+      cols.push('<div class="col-card' + (isHighlight ? ' col-card--highlight' : '') + '">' +
+        '<h3>' + heading.trim() + '</h3>' +
+        body.replace(/<p>([^<]+)<\/p>/g, (m, t) => {
+          if (!t.trim()) return '';
+          return '<p class="col-subtitle">' + t + '</p>';
+        }) + '</div>');
+    }
+    return slideTitle + cols.join('');
+  }
+
+  // ── Load all slides ──
+  async function loadSlides() {
+    const slideFiles = [];
+    // Try loading slides 01..99
+    for (let i = 1; i <= 99; i++) {
+      const num = String(i).padStart(2, '0');
+      try {
+        const res = await fetch('slides/' + num + '.md');
+        if (!res.ok) break;
+        slideFiles.push(await res.text());
+      } catch (e) { break; }
+    }
+
+    // Parse and render each slide
+    slideFiles.forEach((text, i) => {
+      const { meta, body } = parseFrontmatter(text);
+      const { content } = splitNotes(body);
+      const contentHtml = mdToHtml(content);
+      const section = renderSlide(meta, contentHtml, i);
+      deck.appendChild(section);
+    });
+
+    slides = Array.from(deck.querySelectorAll('.slide'));
+    total = slides.length;
+
+    loadingEl.classList.add('hidden');
+    updateCounter();
+    readHash();
+    scaleDeck();
+  }
+
   // ── Scaling ──
   function scaleDeck() {
-    const sw = 1920;
-    const sh = 1080;
+    const sw = 1920, sh = 1080;
     const scaleX = window.innerWidth / sw;
     const scaleY = window.innerHeight / sh;
     const scale = Math.min(scaleX, scaleY);
     deck.style.transform = `scale(${scale})`;
-    // Center the deck if there's leftover space
     const offsetX = (window.innerWidth - sw * scale) / 2;
     const offsetY = (window.innerHeight - sh * scale) / 2;
     deck.style.marginLeft = offsetX + 'px';
     deck.style.marginTop = offsetY + 'px';
   }
   window.addEventListener('resize', scaleDeck);
-  scaleDeck();
 
   // ── Navigation ──
   function goTo(n) {
     if (n < 0 || n >= total || n === current || animating) return;
-
-    // Hide current slide
     const prev = slides[current];
     prev.classList.remove('active');
-    removeAnimationClasses(prev);
+    prev.classList.remove('animate-fade', 'animate-slide-up', 'animate-slide-left', 'animate-zoom');
 
-    // Show next slide
     current = n;
     const next = slides[current];
     next.classList.add('active');
 
-    // Trigger animation
     const anim = next.dataset.animate;
     if (anim) {
       animating = true;
@@ -374,118 +803,84 @@ html, body {
         next.removeEventListener('animationend', handler);
         animating = false;
       });
-      // Safety timeout in case animationend doesn't fire
       setTimeout(() => { animating = false; }, 500);
     }
 
     updateCounter();
     updateHash();
     pauseAllVideos();
+    channel.postMessage({ type: 'slide', index: current });
   }
 
   function next() { goTo(current + 1); }
   function prev() { goTo(current - 1); }
 
-  function removeAnimationClasses(el) {
-    el.classList.remove('animate-fade', 'animate-slide-up', 'animate-slide-left', 'animate-zoom');
-  }
+  // ── BroadcastChannel ──
+  const channel = new BroadcastChannel('slides-sync');
+  channel.onmessage = function (e) {
+    if (e.data.type === 'slide' && e.data.index !== current) goTo(e.data.index);
+  };
 
   // ── Counter & Progress ──
   function updateCounter() {
+    if (!total) return;
     counter.textContent = (current + 1) + ' / ' + total;
     progressBar.style.width = ((current + 1) / total * 100) + '%';
   }
-  updateCounter();
 
   // ── Hash Tracking ──
   function updateHash() {
     history.replaceState(null, '', '#slide=' + (current + 1));
   }
-
   function readHash() {
     const match = location.hash.match(/slide=(\d+)/);
     if (match) {
       const n = parseInt(match[1], 10) - 1;
-      if (n >= 0 && n < total) {
+      if (n >= 0 && n < total && n !== current) {
         slides[current].classList.remove('active');
-        removeAnimationClasses(slides[current]);
         current = n;
         slides[current].classList.add('active');
         updateCounter();
       }
     }
   }
-  readHash();
 
   // ── Video Control ──
   function pauseAllVideos() {
-    deck.querySelectorAll('video').forEach(v => {
-      if (!v.paused) v.pause();
-    });
+    deck.querySelectorAll('video').forEach(v => { if (!v.paused) v.pause(); });
   }
-
   function isVideoPlaying() {
-    const activeSlide = slides[current];
-    const video = activeSlide.querySelector('video');
+    const video = slides[current]?.querySelector('video');
     return video && !video.paused;
   }
 
   // ── Keyboard ──
   document.addEventListener('keydown', function (e) {
-    // Suppress navigation while video is playing
-    if (isVideoPlaying() && ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', ' '].includes(e.key)) {
-      return;
-    }
-
+    if (isVideoPlaying() && ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].includes(e.key)) return;
     switch (e.key) {
-      case 'ArrowRight':
-      case 'ArrowDown':
-      case ' ':
-      case 'PageDown':
-        e.preventDefault();
-        next();
-        break;
-      case 'ArrowLeft':
-      case 'ArrowUp':
-      case 'PageUp':
-        e.preventDefault();
-        prev();
-        break;
-      case 'Home':
-        e.preventDefault();
-        goTo(0);
-        break;
-      case 'End':
-        e.preventDefault();
-        goTo(total - 1);
-        break;
-      case 'f':
-      case 'F':
-        // Toggle fullscreen on video slides
-        var video = slides[current].querySelector('video');
+      case 'ArrowRight': case 'ArrowDown': case ' ': case 'PageDown':
+        e.preventDefault(); next(); break;
+      case 'ArrowLeft': case 'ArrowUp': case 'PageUp':
+        e.preventDefault(); prev(); break;
+      case 'Home': e.preventDefault(); goTo(0); break;
+      case 'End': e.preventDefault(); goTo(total - 1); break;
+      case 'f': case 'F':
+        var video = slides[current]?.querySelector('video');
         if (video) {
-          if (document.fullscreenElement) {
-            document.exitFullscreen();
-          } else {
-            video.requestFullscreen();
-          }
+          if (document.fullscreenElement) document.exitFullscreen();
+          else video.requestFullscreen();
         }
         break;
     }
   });
 
-  // ── Video Click → Fullscreen ──
-  deck.addEventListener('click', function (e) {
-    const video = e.target.closest('video');
-    if (video && video.hasAttribute('data-fullscreen')) {
-      if (document.fullscreenElement) {
-        document.exitFullscreen();
-      } else {
-        video.requestFullscreen();
-      }
-    }
+  // ── Prevent double-click fullscreen on videos ──
+  deck.addEventListener('dblclick', function (e) {
+    if (e.target.closest('video')) e.preventDefault();
   });
 
+  // ── Init ──
+  loadSlides();
 })();
 </script>
 
