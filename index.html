@@ -187,6 +187,24 @@ html, body {
   line-height: 1.15;
   grid-column: 1 / -1;
 }
+.slide--two-col .two-col-column h3 {
+  font-size: 32px;
+  font-weight: 600;
+  color: var(--yellow);
+  margin-bottom: 20px;
+}
+.slide--two-col .two-col-column ul {
+  font-size: 26px;
+  font-weight: 300;
+  line-height: 1.8;
+  color: var(--white-70);
+  list-style: none;
+  padding: 0;
+}
+.slide--two-col .two-col-column ul li::before {
+  content: '→ ';
+  color: var(--yellow);
+}
 
 /* Profile slide */
 .slide--profile {
@@ -689,9 +707,23 @@ html, body {
     if (index === 0) section.classList.add('active');
 
     if (type === 'video') {
-      section.innerHTML = '<video src="' + (meta.src || '') + '" data-fullscreen controls preload="metadata"></video>';
+      section.innerHTML = '<video src="' + (meta.src || '') + '" data-fullscreen controls preload="metadata"' + (meta.muted === 'true' ? ' muted' : '') + '></video>';
     } else if (type === 'three-col') {
       section.innerHTML = renderThreeCol(contentHtml);
+    } else if (type === 'two-col') {
+      // h2 = title (full width), h3s = column headers
+      const h1Match = contentHtml.match(/<h1>(.*?)<\/h1>/);
+      const title = h1Match ? '<h2>' + h1Match[1] + '</h2>' : '';
+      const afterTitle = contentHtml.replace(/<h1>.*?<\/h1>/, '');
+      // Promote ## to h2 if present
+      let body = afterTitle.replace(/<h2>/g, '<h2>').replace(/<\/h2>/g, '</h2>');
+      // Split by h3 into columns
+      const parts = body.split(/(<h3>)/);
+      const cols = [];
+      for (let i = 1; i < parts.length; i += 2) {
+        cols.push('<div class="two-col-column">' + parts[i] + (parts[i+1] || '') + '</div>');
+      }
+      section.innerHTML = title + cols.join('');
     } else if (type === 'profile' || type === 'demo-intro') {
       section.innerHTML = contentHtml;
     } else if (type === 'title') {
@@ -748,7 +780,9 @@ html, body {
       try {
         const res = await fetch('slides/' + num + '.md');
         if (!res.ok) break;
-        slideFiles.push(await res.text());
+        const text = await res.text();
+        if (!text.startsWith('---')) break;
+        slideFiles.push(text);
       } catch (e) { break; }
     }
 
@@ -871,6 +905,16 @@ html, body {
           else video.requestFullscreen();
         }
         break;
+      case 'j': case 'J':
+        e.preventDefault();
+        e.stopPropagation();
+        (function() { var v = document.querySelector('.slide.active video'); if (v) { v.currentTime = v.currentTime - 5; } })();
+        return;
+      case 'l': case 'L':
+        e.preventDefault();
+        e.stopPropagation();
+        (function() { var v = document.querySelector('.slide.active video'); if (v) { v.currentTime = v.currentTime + 5; } })();
+        return;
     }
   });
 

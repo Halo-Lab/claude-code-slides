@@ -9,7 +9,7 @@ Single-file HTML/CSS/JS slide engine for a Halo Lab webinar: "How to Use Claude 
 ## Development
 
 ```bash
-python3 -m http.server 8000   # required — fonts won't load via file://
+npx serve -l 8000             # required — supports range requests for video seeking
 # Open http://localhost:8000 in Chrome at 1920x1080
 ```
 
