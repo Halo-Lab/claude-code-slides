@@ -646,6 +646,14 @@ html, body {
   const progressBar = document.getElementById('progress-bar');
   const loadingEl = document.getElementById('loading');
 
+  const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+  const VIDEO_BASE = isLocal ? '' : 'https://github.com/Halo-Lab/claude-code-slides/raw/main/';
+
+  function resolveAsset(src) {
+    if (!src || src.startsWith('http')) return src;
+    return VIDEO_BASE + src;
+  }
+
   let slides = [];
   let total = 0;
   let current = 0;
@@ -740,7 +748,7 @@ html, body {
     if (index === 0) section.classList.add('active');
 
     if (type === 'video') {
-      section.innerHTML = '<video src="' + (meta.src || '') + '" data-fullscreen controls preload="metadata"' + (meta.muted === 'true' ? ' muted' : '') + '></video>';
+      section.innerHTML = '<video src="' + resolveAsset(meta.src || '') + '" data-fullscreen controls preload="metadata"' + (meta.muted === 'true' ? ' muted' : '') + '></video>';
     } else if (type === 'three-col') {
       section.innerHTML = renderThreeCol(contentHtml);
     } else if (type === 'two-col') {
